@@ -23,7 +23,7 @@ class Photographer extends Authenticatable
         return $this->hasMany(Product::class, 'photographer_id');
     }
 
-    public function photoshootsAsPhotographer()
+    public function photoshoots()
     {
         return $this->hasMany(Photoshoot::class, 'photographer_id');
     }

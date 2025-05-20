@@ -23,6 +23,10 @@
                     <x-nav-link :href="route('pack.index')" :active="request()->routeIs('pack.index')">
                         {{ __('Packs') }}
                     </x-nav-link>
+                     {{-- CREAR SESIONES / MOSTRAR SESIONES --}}
+                    <x-nav-link :href="route('photoshoot.index')" :active="request()->routeIs('photoshoot.index')">
+                        {{ __('Sesiones') }}
+                    </x-nav-link>
                 </div>
             </div>
 

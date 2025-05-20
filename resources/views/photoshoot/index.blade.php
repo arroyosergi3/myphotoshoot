@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight">
-            {{ __('Productos') }}
+            {{ __('Sesiones') }}
         </h2>
     </x-slot>
 
@@ -15,54 +15,50 @@
             @endif
             <div class=" overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <a href="{{ route('product.create') }}"><x-primary-button>Nuevo Producto</x-primary-button></a>
+                    <a href="{{ route('photoshoot.create') }}"><x-primary-button>Nueva Sesión</x-primary-button></a>
 
                     <table class="min-w-full text-center mt-4">
                         <thead>
                             <tr>
                                 <th class="px-4 py-2">Nombre</th>
-                                <th class="px-4 py-2">Descripcion</th>
-                                <th class="px-4 py-2">Precio</th>
                                 <th class="px-4 py-2">Imagen</th>
-                                <th class="px-4 py-2">Acciones</th>
+                                <th class="px-4 py-2">Descripcion</th>
                             </tr>
 
                         </thead>
                         <tbody>
-                            @if ($products->isEmpty())
+                            @if ($photoshoots->isEmpty())
                                 <tr>
                                     <td colspan="5" class="py-4 text-center text-gray-500">
-                                        Todavía no has creado ningún Producto
+                                        Todavía no has creado ninguna sesión
                                     </td>
                                 </tr>
                             @endif
 
 
-                            @foreach ($products as $p)
+                            @foreach ($photoshoots as $ps)
                                 <tr class="border-b hover:bg-indigo-100 hover:rounded">
-                                    <td class="px-4 py-2">{{ $p->name }}</td>
-                                    <td class="px-4 py-2">{{ $p->description }}</td>
-                                    <td class="px-4 py-2">{{ number_format($p->price, 2) }}€</td>
-
+                                    <td class="px-4 py-2">{{ $ps->name }}</td>
+                                    <td class="px-4 py-2">{{ $ps->description }}</td>
                                     <td class="px-4 py-2 flex justify-center items-center"><img
-                                            src="{{ asset($p->img_url) }}" width="100px" alt=""></td>
+                                            src="{{ asset($ps->img_url) }}" width="100px" alt=""></td>
                                     <td class="px-4 py-2 space-x-2">
-                                        <a href="{{ route('product.edit', $p) }}"><x-primary-button><i
+                                        <a href="{{ route('photoshoot.edit', $ps) }}"><x-primary-button><i
                                                     class="fa-solid fa-pen-to-square me-2"></i> {{ __('Editar') }}
                                             </x-primary-button></a>
 
-                                        <form action="{{ route('product.destroy', $p) }}" method="POST"
+                                        <form action="{{ route('photoshoot.destroy', $ps) }}" method="POST"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
                                             {{-- Botón que abre el modal --}}
                                             <x-danger-button class="ms-3" x-data=""
-                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-product-deletion-{{ $p->id }}')">
+                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-product-deletion-{{ $ps->id }}')">
                                                 <i class="fa-solid fa-trash me-2"></i> {{ __(' Eliminar') }}
                                             </x-danger-button>
 
                                             {{-- Modal de confirmación --}}
-                                            <x-modal name="confirm-product-deletion-{{ $p->id }}"
+                                            <x-modal name="confirm-product-deletion-{{ $ps->id }}"
                                                 :show="$errors->productDeletion->isNotEmpty()" focusable>
                                                 <div class="p-6">
                                                     <h2 class="text-lg font-medium text-gray-900">
@@ -93,7 +89,7 @@
                         </tbody>
                     </table>
                     <div class="mt-4">
-                        {{ $products->links() }}
+                        {{ $photoshoots->links() }}
                     </div>
                 </div>
             </div>

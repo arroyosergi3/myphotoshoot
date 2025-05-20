@@ -54,7 +54,7 @@ class ProductController extends Controller
     // 3. Crear un nuevo producto en la base de datos
     Product::create([
         'name' => $request->name,
-        'photographer_id' => Auth::guard('photographer')->user()->id,
+        'photographer_id' => Auth::guard( 'photographer')->user()->id,
         'img_url' => $imageUrl,
         'description' => $request->description,
         'price' => $request->price,
