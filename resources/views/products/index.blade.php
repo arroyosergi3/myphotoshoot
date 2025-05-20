@@ -1,15 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight">
-            {{ __('Packs') }}
+            {{ __('Productos') }}
         </h2>
     </x-slot>
 
     <div class="py-12 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('success'))
+                <x-alert t="success" m="{{ session('success') }}"></x-alert>
+            @endif
+
             <div class=" overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <a href="{{ route('pack.create') }}"><x-primary-button>Nuevo Pack</x-primary-button></a>
+                    <a href="{{ route('product.create') }}"><x-primary-button>Nuevo Producto</x-primary-button></a>
 
                     <table class="min-w-full text-center mt-4">
                         <thead>
@@ -23,22 +27,23 @@
 
                         </thead>
                         <tbody>
-                           @if ($products->isEmpty())
-    <tr>
-        <td colspan="4" class="py-4 text-center text-gray-500">
-            Todavía no has creado ningún pack
-        </td>
-    </tr>
-@endif
+                            @if ($products->isEmpty())
+                                <tr>
+                                    <td colspan="5" class="py-4 text-center text-gray-500">
+                                        Todavía no has creado ningún Producto
+                                    </td>
+                                </tr>
+                            @endif
 
 
                             @foreach ($products as $p)
-                                <tr class="border-b">
+                                <tr class="border-b hover:bg-indigo-100 hover:rounded">
                                     <td class="px-4 py-2">{{ $p->name }}</td>
                                     <td class="px-4 py-2">{{ $p->description }}</td>
                                     <td class="px-4 py-2">{{ number_format($p->price, 2) }}€</td>
 
-                                    <td class="px-4 py-2"><img src="{{ assets($p->img_url) }}" width="100px" alt=""></td>
+                                    <td class="px-4 py-2 flex justify-center items-center"><img
+                                            src="{{ asset($p->img_url) }}" width="100px" alt=""></td>
                                     <td class="px-4 py-2 space-x-2">
                                         <a href="{{ route('product.edit', $p) }}"><x-primary-button><i
                                                     class="fa-solid fa-pen-to-square me-2"></i> {{ __('Editar') }}
@@ -47,11 +52,36 @@
                                         <form action="{{ route('product.destroy', $p) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-
-                                            <x-danger-button class="ms-3"
-                                                onclick="return confirm('¿Estás seguro de eliminar este tratamiento?')">
+                                            {{-- Botón que abre el modal --}}
+                                            <x-danger-button class="ms-3" x-data=""
+                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-product-deletion-{{ $p->id }}')">
                                                 <i class="fa-solid fa-trash me-2"></i> {{ __(' Eliminar') }}
                                             </x-danger-button>
+
+                                            {{-- Modal de confirmación --}}
+                                            <x-modal name="confirm-product-deletion-{{ $p->id }}"
+                                                :show="$errors->productDeletion->isNotEmpty()" focusable>
+                                                <div class="p-6">
+                                                    <h2 class="text-lg font-medium text-gray-900">
+                                                        ¿Estás seguro de que quieres eliminar este tratamiento?
+                                                    </h2>
+
+                                                    <p class="mt-1 text-sm text-gray-600">
+                                                        Una vez que el tratamiento sea eliminado, todos sus datos se
+                                                        borrarán permanentemente.
+                                                    </p>
+
+                                                    <div class="mt-6 flex justify-end">
+                                                        <x-secondary-button x-on:click="$dispatch('close')">
+                                                            {{ __('Cancelar') }}
+                                                        </x-secondary-button>
+
+                                                        <x-danger-button class="ms-3">
+                                                            {{ __('Eliminar Producto') }}
+                                                        </x-danger-button>
+                                                    </div>
+                                                </div>
+                                            </x-modal>
                                         </form>
                                     </td>
                                 </tr>
@@ -60,7 +90,7 @@
                         </tbody>
                     </table>
                     <div class="mt-4">
-                        {{ $packs->links() }}
+                        {{ $products->links() }}
                     </div>
                 </div>
             </div>

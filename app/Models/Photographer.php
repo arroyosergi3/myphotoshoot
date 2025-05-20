@@ -12,4 +12,21 @@ class Photographer extends Authenticatable
         'cif',
         'password',
     ];
+
+     public function packs()
+    {
+        return $this->hasMany(Pack::class, 'photographer_id');
+    }
+
+     public function products()
+    {
+        return $this->hasMany(Product::class, 'photographer_id');
+    }
+
+    public function photoshootsAsPhotographer()
+    {
+        return $this->hasMany(Photoshoot::class, 'photographer_id');
+    }
+
+
 }

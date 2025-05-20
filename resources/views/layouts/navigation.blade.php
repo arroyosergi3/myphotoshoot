@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     {{-- CREAR PRODUCTOS / MOSTRAR PRODUCTOS --}}
-                    <x-nav-link :href="route('pack.index')" :active="request()->routeIs('pack.index')">
+                    <x-nav-link :href="route('product.index')" :active="request()->routeIs('product.index')">
                         {{ __('Productos') }}
                     </x-nav-link>
                     {{-- CREAR PACK / MOSTRAR PACK --}}
@@ -67,9 +67,8 @@
                 @endauth
 
                 {{--  AUTH DE FOTOGRAFOS --}}
-
                 @auth('photographer')
-                    {{ Auth::guard('photographer')->user()->name }}
+                   ¡Hola,  {{ Auth::guard('photographer')->user()->name }}!
                 @endauth
 
                 @if (!Auth::guard('web')->check() && !Auth::guard('photographer')->check())

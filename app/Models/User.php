@@ -57,25 +57,12 @@ class User extends Authenticatable
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
-     public function packs()
-    {
-        return $this->hasMany(Pack::class, 'photographer_id');
-    }
-
-    public function photoshootsAsPhotographer()
-    {
-        return $this->hasMany(Photoshoot::class, 'photographer_id');
-    }
-
+    
     // Si el usuario es cliente
     public function photoshootsAsClient()
     {
         return $this->hasMany(Photoshoot::class, 'client_id');
     }
 
-    public function photos()
-    {
-        return $this->hasMany(Photo::class, 'client_id');
-    }
-
+    
 }
