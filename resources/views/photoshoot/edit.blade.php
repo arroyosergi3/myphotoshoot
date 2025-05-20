@@ -65,7 +65,6 @@
     <template x-if="preview">
         <img :src="preview" class="mt-2 w-32 h-32 object-cover rounded border border-gray-300 dark:border-gray-600">
     </template>
-
     <x-input-error :messages="$errors->get('img_url')" />
 </div>
 

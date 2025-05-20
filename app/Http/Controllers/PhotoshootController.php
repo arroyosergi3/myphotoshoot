@@ -90,6 +90,8 @@ class PhotoshootController extends Controller
      */
     public function destroy(Photoshoot $photoshoot)
     {
-        //
+            $photoshoot->delete();
+        return redirect()->route('photoshoot.index')->with( 'success', 'Sesion eliminado correctamente.');
+  
     }
 }

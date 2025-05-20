@@ -55,11 +55,36 @@
                                         <form action="{{ route('pack.destroy', $p) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-
-                                            <x-danger-button class="ms-3"
-                                                onclick="return confirm('¿Estás seguro de eliminar este tratamiento?')">
+{{-- Botón que abre el modal --}}
+                                            <x-danger-button class="ms-3" x-data=""
+                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-product-deletion-{{ $p->id }}')">
                                                 <i class="fa-solid fa-trash me-2"></i> {{ __(' Eliminar') }}
                                             </x-danger-button>
+
+                                            {{-- Modal de confirmación --}}
+                                            <x-modal name="confirm-product-deletion-{{ $p->id }}"
+                                                :show="$errors->productDeletion->isNotEmpty()" focusable>
+                                                <div class="p-6">
+                                                    <h2 class="text-lg font-medium text-gray-900">
+                                                        ¿Estás seguro de que quieres eliminar este pack?
+                                                    </h2>
+
+                                                    <p class="mt-1 text-sm text-gray-600">
+                                                        Una vez que el pack sea eliminado, todos sus datos se
+                                                        borrarán permanentemente.
+                                                    </p>
+
+                                                    <div class="mt-6 flex justify-end">
+                                                        <x-secondary-button x-on:click="$dispatch('close')">
+                                                            {{ __('Cancelar') }}
+                                                        </x-secondary-button>
+
+                                                        <x-danger-button class="ms-3">
+                                                            {{ __('Eliminar Pack') }}
+                                                        </x-danger-button>
+                                                    </div>
+                                                </div>
+                                            </x-modal>
                                         </form>
                                     </td>
                                 </tr>

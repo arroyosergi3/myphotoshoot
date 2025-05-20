@@ -81,22 +81,59 @@ class PackController extends Controller
      */
     public function edit(Pack $pack)
     {
-        //
+        $p = $pack;
+        $photoshoots = Auth::guard('photographer')->user()->photoshoots;
+         return view('pack.edit', compact('p', 'photoshoots'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Pack $pack)
-    {
-        //
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string|max:1000',
+        'photoshoot' => 'nullable|exists:photoshoots,id',
+        'price' => 'required|numeric|min:0',
+        'img_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+    ]);
+
+    // Procesar nueva imagen si se sube
+    if ($request->hasFile('img_url')) {
+        $image = $request->file('img_url');
+        $filename = time() . '_' . Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $image->getClientOriginalExtension();
+        $destinationPath = public_path('images/packs');
+
+        // Guardar nueva imagen
+        $image->move($destinationPath, $filename);
+
+        // Eliminar imagen anterior si existe
+        if ($pack->img_url && file_exists(public_path($pack->img_url))) {
+            unlink(public_path($pack->img_url));
+        }
+
+        $pack->img_url = '/images/packs/' . $filename;
     }
 
+    // Actualizar los demás campos
+    $pack->update([
+        'name' => $request->name,
+        'description' => $request->description,
+        'photoshoot_id' => $request->photoshoot,
+        'price' => $request->price,
+        // 'img_url' ya se asignó arriba si había una nueva imagen
+    ]);
+
+    return redirect()->route('pack.index')->with('success', 'Pack actualizado correctamente.');
+}
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Pack $pack)
     {
-        //
+            $pack->delete();
+        return redirect()->route('pack.index')->with( 'success', 'Pack eliminado correctamente.');
+  
     }
 }
