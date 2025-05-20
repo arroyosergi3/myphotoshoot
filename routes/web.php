@@ -23,6 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get('/loginForPhotographer', function () {
+    return view('auth.loginForPhotographers');
+})->name('loginForPhotographers');
+
+Route::get('/registerForPhotographers', function () {
+    return view('auth.registerForPhotographers');
+})->name('registerForPhotographers');
+
 
 Route::resource('gallery', GalleryController::class);
 Route::resource('pack', PackController::class);

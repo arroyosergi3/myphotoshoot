@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('photoshoot_id')->constrained('photoshoots')->onDelete('cascade');
             $table->string('name');
+            $table->foreignId('photographer_id')->constrained('photographers')->onDelete('cascade');
             $table->string('image_url');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);

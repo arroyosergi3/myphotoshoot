@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Photographer;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -35,11 +36,21 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        if (!$request->has("isPhotographer")){
+ $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        }else{
+            $user = Photographer::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'cif' => $request->cif,
+            'password' => Hash::make($request->password),
+        ]);
+        }
+       
 
         event(new Registered($user));
 
