@@ -64,7 +64,7 @@
                                                     <h2 class="text-lg font-medium text-gray-900">
                                                         ¿Estás seguro de que quieres eliminar este tratamiento?
                                                     </h2>
-
+¡
                                                     <p class="mt-1 text-sm text-gray-600">
                                                         Una vez que el tratamiento sea eliminado, todos sus datos se
                                                         borrarán permanentemente.

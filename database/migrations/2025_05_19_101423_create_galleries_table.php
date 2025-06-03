@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('photographer_id')->constrained('photographers')->onDelete('cascade');
             $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
-            $table->date('date');
+            $table->boolean('can_publish')->default(true);
             $table->timestamps();
         });
     }

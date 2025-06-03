@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('loginForPhotographers') }}">
         @csrf
 
 
@@ -49,5 +49,8 @@
             </x-primary-button>
         </div>
     </form>
-    <a href="{{ route("registerForPhotographers") }}">Aun no tienes cuenta? crea una</a>
-</x-guest-layout>
+  <hr class="my-2">
+    <div class="w-full flex items-center justify-center">
+        <p class="me-2">¿Aún no tienes una cuenta?</p>
+        <x-primary-button onclick="window.location.href='{{ route('registerForPhotographers') }}';">Create una ahora</x-primary-button>
+    </div></x-guest-layout>

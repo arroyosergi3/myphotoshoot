@@ -34,14 +34,20 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            
         ]);
 
         if (!$request->has("isPhotographer")){
  $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'dni' => $request->dni,
             'password' => Hash::make($request->password),
+            
         ]);
+        
+        Auth::login($user);
         }else{
             $user = Photographer::create([
             'name' => $request->name,
@@ -49,12 +55,12 @@ class RegisteredUserController extends Controller
             'cif' => $request->cif,
             'password' => Hash::make($request->password),
         ]);
+        Auth::guard('photographer')->login($user);
         }
        
 
         event(new Registered($user));
 
-        Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
     }

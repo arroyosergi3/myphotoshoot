@@ -55,6 +55,15 @@
 </div>
 
 
+    <!--  Duracion -->
+    <div>
+        <x-input-label for="duration" :value="__('Duración (Horas)')" />
+        <x-text-input id="duration" class="block mt-1 w-full" type="time" name="duration" :value="old('duration')" required autofocus autocomplete="name" />
+        <x-input-error :messages="$errors->get('duration')" class="mt-2" />
+    </div>
+
+
+
     <div class="flex items-center justify-end mt-4">
         <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('product.index') }}">
             {{ __('Back to Products') }}

@@ -16,6 +16,7 @@ class PackController extends Controller
     {
         /** @disregard */
         $packs = Auth::guard('photographer')->user()->packs()->paginate(4);
+       
         return view('pack.index',  compact('packs'));
     }
 
@@ -28,6 +29,50 @@ class PackController extends Controller
          $photoshoots = Auth::guard('photographer')->user()->photoshoots()->paginate(4);
         return view('pack.create', compact('photoshoots'));
     }
+
+    public function content(Pack $pack)
+{
+    /** @disregard */
+    $photographerProducts = Auth::guard('photographer')->user()->products()->get();
+
+    // Productos ya en el pack, con cantidad (desde el pivot)
+    $productsInPack = $pack->products()->get()->keyBy('id');
+
+    return view('pack.contents', compact('photographerProducts', 'productsInPack', 'pack'));
+}
+
+
+public function addContent(Request $request, Pack $pack)
+{
+    $submittedProducts = $request->input('products', []);
+
+    // IDs de productos que el usuario quiere tener en el pack
+    $selectedProductIds = [];
+
+    foreach ($submittedProducts as $productId => $info) {
+        if (isset($info['selected'])) {
+            $cuantity = intval($info['cuantity'] ?? 1);
+
+            // Guardamos el ID para saber que debe quedar en el pack
+            $selectedProductIds[] = $productId;
+
+            // Insertar o actualizar sin duplicar
+            $pack->products()->syncWithoutDetaching([
+                $productId => ['cuantity' => $cuantity]
+            ]);
+        }
+    }
+
+    // Eliminar los productos que ya estaban pero fueron desmarcados
+    $pack->products()->wherePivotNotIn('product_id', $selectedProductIds)->detach();
+
+    return redirect()->route('pack.index')->with('success', 'Productos actualizados correctamente en el pack.');
+}
+
+
+
+
+
 
     /**
      * Store a newly created resource in storage.

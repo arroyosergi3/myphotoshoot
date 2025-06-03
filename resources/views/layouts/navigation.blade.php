@@ -15,18 +15,26 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    {{-- CREAR PRODUCTOS / MOSTRAR PRODUCTOS --}}
-                    <x-nav-link :href="route('product.index')" :active="request()->routeIs('product.index')">
-                        {{ __('Productos') }}
-                    </x-nav-link>
-                    {{-- CREAR PACK / MOSTRAR PACK --}}
-                    <x-nav-link :href="route('pack.index')" :active="request()->routeIs('pack.index')">
-                        {{ __('Packs') }}
-                    </x-nav-link>
-                     {{-- CREAR SESIONES / MOSTRAR SESIONES --}}
-                    <x-nav-link :href="route('photoshoot.index')" :active="request()->routeIs('photoshoot.index')">
-                        {{ __('Sesiones') }}
-                    </x-nav-link>
+                    @auth('photographer')
+                        {{-- CRUD PRODUCTOS --}}
+                        <x-nav-link :href="route('product.index')" :active="request()->routeIs('product.index')">
+                            {{ __('Productos') }}
+                        </x-nav-link>
+                        {{-- CRUD SESIONES --}}
+                        <x-nav-link :href="route('photoshoot.index')" :active="request()->routeIs('photoshoot.index')">
+                            {{ __('Sesiones') }}
+                        </x-nav-link>
+                        {{-- CRUD PACK --}}
+                        <x-nav-link :href="route('pack.index')" :active="request()->routeIs('pack.index')">
+                            {{ __('Packs') }}
+                        </x-nav-link>
+                        {{-- AGENDA --}}
+                        <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
+                            {{ __('Agenda') }}
+                        </x-nav-link>
+
+                    @endauth
+
                 </div>
             </div>
 
@@ -36,7 +44,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
-                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-900 bg-indigo-300 hover:text-indigo-300 hover:bg-indigo-900 focus:outline-none transition ease-in-out duration-150">
                                 <div>{{ Auth::user()->name }}</div>
 
                                 <div class="ms-1">
@@ -70,30 +78,64 @@
 
                 @endauth
 
-                {{--  AUTH DE FOTOGRAFOS --}}
                 @auth('photographer')
-                   ¡Hola,  {{ Auth::guard('photographer')->user()->name }}!
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-900 bg-indigo-300 hover:text-indigo-300 hover:bg-indigo-900 focus:outline-none transition ease-in-out duration-150">
+                                <div>{{ Auth::guard('photographer')->user()->name }}</div>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logoutForPhotographers') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logoutForPhotographers')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
                 @endauth
 
-                @if (!Auth::guard('web')->check() && !Auth::guard('photographer')->check())
-                <div class="flex ">
-                    <div class="shrink-0 flex items-center invisible">
-    <x-application-logo class="block h-9 w-auto" />
-</div>
 
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" >
+                @if (!Auth::guard('web')->check() && !Auth::guard('photographer')->check())
+                    <div class="flex ">
+                        <div class="shrink-0 flex items-center invisible">
+                            <x-application-logo class="block h-9 w-auto" />
+                        </div>
+
+                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex ">
                             <x-nav-link :href="route('login')" :active="request()->routeIs('login')" align="right">
-                                {{ __('Iniciar Sesión') }}
+                                {{ __('Iniciar sesión como cliente') }}
                             </x-nav-link>
 
-                            <x-nav-link :href="route('loginForPhotographers')" :active="request()->routeIs('loginForPhotographers')" align="right">
-                                {{ __('Iniciar Sesión para Fotógrafos') }}
+                            <div class="w-px h-full bg-indigo-300 mx-2"></div>
+                            
+                            <x-nav-link class="bg-indigo-300 text-indigo-900  rounded-lg px-4 hover:text-indigo-300 hover:bg-indigo-900" :href="route('loginForPhotographers')" :active="request()->routeIs('loginForPhotographers')" align="right">
+                                {{ __('Iniciar sesión como fotógrafo') }}
                             </x-nav-link>
                         </div>
-                        
-                </div>
-                    
-                    @endif
+
+                    </div>
+                @endif
 
 
 
@@ -121,9 +163,20 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if (!Auth::guard('web')->check() && !Auth::guard('photographer')->check())
+                <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" align="right">
+                    {{ __('Iniciar sesión como cliente') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('loginForPhotographers')" :active="request()->routeIs('loginForPhotographers')" align="right">
+                    {{ __('Iniciar sesión como fotógrafo') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
-        <!-- Responsive Settings Options -->
+
+
+
+        <!-- Responsive Settings Options For Clients -->
         @auth
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">
@@ -149,6 +202,38 @@
                 </div>
             </div>
         @endauth
+
+
+
+
+
+        @if (Auth::guard('photographer')->check())
+            <div class="pt-4 pb-1 border-t border-gray-200">
+                <div class="px-4">
+                    <div class="font-medium text-base text-gray-800">{{ Auth::guard('photographer')->user()->name }}
+                    </div>
+                    <div class="font-medium text-sm text-gray-500">{{ Auth::guard('photographer')->user()->email }}
+                    </div>
+                </div>
+
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
+                    </x-responsive-nav-link>
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logoutForPhotographers') }}">
+                        @csrf
+
+                        <x-responsive-nav-link :href="route('logoutForPhotographers')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
+            </div>
+        @endif
 
     </div>
 </nav>

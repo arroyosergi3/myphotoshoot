@@ -17,7 +17,7 @@
                 <div class="p-6 text-gray-900">
                     <a href="{{ route('pack.create') }}"><x-primary-button>Nuevo Pack</x-primary-button></a>
 
-                    <table class="min-w-full text-center mt-4">
+                    <table class="min-w-full text-center mt-4 text-indigo-900">
                         <thead>
                             <tr>
                                 <th class="px-4 py-2">Nombre</th>
@@ -41,7 +41,7 @@
                             @foreach ($packs as $p)
                                 <tr class="border-b hover:bg-indigo-100">
                                     <td class="px-4 py-2">{{ $p->name }}</td>
-                                    <td class="px-4 py-2"><a href=""> Enlace a contenidos</a></td>
+                                    <td class="px-4 py-2"><a class="underline" href="{{ route('addcontent', ['pack' => $p->id]) }}"> Enlace a contenidos</a></td>
                                     <td class="px-4 py-2">{{ number_format($p->price, 2) }}€</td>
                                     <td class="px-4 py-2">{{ $p->photoshoot->name }}</td>
                                     <td class="px-4 py-2 flex justify-center items-center"><img
@@ -56,7 +56,7 @@
                                             @csrf
                                             @method('DELETE')
 {{-- Botón que abre el modal --}}
-                                            <x-danger-button class="ms-3" x-data=""
+                                            <x-danger-button class="mt-3" x-data=""
                                                 x-on:click.prevent="$dispatch('open-modal', 'confirm-product-deletion-{{ $p->id }}')">
                                                 <i class="fa-solid fa-trash me-2"></i> {{ __(' Eliminar') }}
                                             </x-danger-button>

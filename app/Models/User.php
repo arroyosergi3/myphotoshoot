@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'dni',
+        'phone',
     ];
 
     /**
@@ -54,15 +56,37 @@ class User extends Authenticatable
     {
         return Str::of($this->name)
             ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
-    
+
     // Si el usuario es cliente
     public function photoshootsAsClient()
     {
         return $this->hasMany(Photoshoot::class, 'client_id');
     }
 
-    
+    public function packs()
+    {
+        if (!$this instanceof Photographer) {
+            return null; // o throw new Exception('Not a photographer');
+        }
+        return $this->hasMany(Pack::class, 'photographer_id');
+    }
+
+    public function products()
+    {
+        if (!$this instanceof Photographer) {
+            return null; // o throw new Exception('Not a photographer');
+        }
+        return $this->hasMany(Product::class, 'photographer_id');
+    }
+
+    public function photoshoots()
+    {
+        if (!$this instanceof Photographer) {
+            return null; // o throw new Exception('Not a photographer');
+        }
+        return $this->hasMany(Photoshoot::class, 'photographer_id');
+    }
 }

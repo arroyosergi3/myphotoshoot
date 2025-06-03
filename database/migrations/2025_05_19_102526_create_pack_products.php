@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pack_id')->constrained('packs')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->string('img_url');
             $table->integer('cuantity');
+            $table->unique(['pack_id', 'product_id']);
             $table->timestamps();
         });
     }

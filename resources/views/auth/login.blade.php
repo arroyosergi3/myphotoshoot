@@ -44,4 +44,9 @@
             </x-primary-button>
         </div>
     </form>
+    <hr class="my-2">
+    <div class="w-full flex items-center justify-center">
+        <p class="me-2">¿Aún no tienes una cuenta?</p>
+        <x-primary-button onclick="window.location.href='{{ route('register') }}';">Create una ahora</x-primary-button>
+    </div>
 </x-guest-layout>

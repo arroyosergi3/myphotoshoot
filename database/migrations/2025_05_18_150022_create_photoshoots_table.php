@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('photographer_id')->constrained('photographers')->onDelete('cascade');
             $table->string('name');
             $table->string('img_url');
+            $table->time('duration');
             $table->text('description');
             $table->timestamps();
         });

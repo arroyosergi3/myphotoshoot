@@ -23,4 +23,12 @@ class Pack extends Model
     {
         return $this->belongsTo(Photoshoot::class, 'photoshoot_id');
     }
+    public function products()
+{
+    return $this->belongsToMany(Product::class, 'pack_products')
+        ->withPivot('cuantity') 
+        ->withTimestamps();
+}
+
+
 }

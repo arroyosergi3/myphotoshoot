@@ -9,6 +9,7 @@ class Photoshoot extends Model
     protected $fillable = [
     'name',
     'description',
+    'duration',
     'img_url',
     'photographer_id',
 ];
@@ -17,9 +18,12 @@ class Photoshoot extends Model
     {
         return $this->belongsTo(User::class, 'photographer_id');
     }
-
-    public function client()
+     public function packs()
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->hasMany(Pack::class, 'photoshoot_id');
     }
+
+
+
+  
 }

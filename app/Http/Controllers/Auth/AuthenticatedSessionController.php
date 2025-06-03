@@ -31,6 +31,22 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
+    public function storeForPhotographer(Request $request): RedirectResponse
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (!Auth::guard('photographer')->attempt($credentials, $request->filled('remember'))) {
+            return back()->withErrors([
+                'email' => 'Las credenciales no son válidas.',
+            ]);
+        }
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard'));
+    }
+
+
+
     /**
      * Destroy an authenticated session.
      */
@@ -44,4 +60,15 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+      public function destroyForPhotographer(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
 }
